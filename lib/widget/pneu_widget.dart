@@ -15,9 +15,11 @@ class _PneuWidgetState extends State<PneuWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap:()=> setState(() {
-        widget.onTap.call(!widget.value);
-      }),
+      onTap: () => setState(
+        () {
+          widget.onTap.call(!widget.value);
+        },
+      ),
       child: SizedBox(
         height: 40,
         width: 40,

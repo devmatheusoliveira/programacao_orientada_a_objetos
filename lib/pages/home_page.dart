@@ -1,12 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:simulador_de_corrida/classes/simulador.dart';
-import 'package:simulador_de_corrida/classes/veiculo.dart';
+import 'package:simulador_de_corrida/classes/tipos_de_veiculos/bicicleta.dart';
+import 'package:simulador_de_corrida/classes/tipos_de_veiculos/carro_esportivo.dart';
+import 'package:simulador_de_corrida/classes/tipos_de_veiculos/carro_passeio.dart';
+import 'package:simulador_de_corrida/classes/tipos_de_veiculos/motocicleta.dart';
+import 'package:simulador_de_corrida/classes/tipos_de_veiculos/veiculo_motorizado.dart';
 import 'package:simulador_de_corrida/widget/carro_widget.dart';
-import 'package:simulador_de_corrida/widget/dialog_widget.dart';
+import 'package:simulador_de_corrida/widget/dialog_calibrar_por_tipo_widget.dart';
+import 'package:simulador_de_corrida/widget/dialog_imprimir_por_tipo_widget.dart';
+import 'package:simulador_de_corrida/widget/dialog_movimento_por_tipo_widget.dart';
+import 'package:simulador_de_corrida/widget/dialog_seleciona_veiculo_widget.dart';
 import 'package:simulador_de_corrida/widget/pneu_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   double position = 0;
-  Veiculo veiculo = Veiculo(1);
+
   double combustivel = 9.9;
   late Simulador simulador = Simulador();
 
@@ -33,6 +36,53 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.grey.shade400,
       appBar: AppBar(
         actions: [
+          TextButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    contentPadding: EdgeInsets.zero,
+                    content: DialogMovimentoPorTipoWidget(
+                      onChanged: (modelo) {
+                        Navigator.pop(context);
+
+                        setState(() {
+                          switch (modelo) {
+                            case "M":
+                              simulador.moverVeiculosDeUmTipoEspecifico(
+                                  Motocicleta(-1));
+                              break;
+                            case "C":
+                              simulador.moverVeiculosDeUmTipoEspecifico(
+                                  CarroPasseio(-1));
+                              break;
+                            case "E":
+                              simulador.moverVeiculosDeUmTipoEspecifico(
+                                  CarroEsportivo(-1));
+                              break;
+                            case "B":
+                              simulador.moverVeiculosDeUmTipoEspecifico(
+                                  Bicicleta(-1));
+
+                              break;
+                            default:
+                          }
+                        });
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+            child: const Text(
+              "Mover veiculos por tipo",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -42,11 +92,167 @@ class _HomePageState extends State<HomePage> {
           ),
           TextButton(
             onPressed: () {
-              setState(() {
-                simulador.incluirVeiculo();
-              });
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    contentPadding: EdgeInsets.zero,
+                    content: DialogCalibrarPorTipoWidget(
+                      onChanged1: (modelo) {
+                        Navigator.pop(context);
+
+                        setState(() {
+                          switch (modelo) {
+                            case "M":
+                              simulador.calibrarTodosPneusDeMesmoTipoDeVeiculos(
+                                  Motocicleta(-1));
+                              break;
+                            case "C":
+                              simulador.calibrarTodosPneusDeMesmoTipoDeVeiculos(
+                                  CarroPasseio(-1));
+                              break;
+                            case "E":
+                              simulador.calibrarTodosPneusDeMesmoTipoDeVeiculos(
+                                  CarroEsportivo(-1));
+                              break;
+                            case "B":
+                              simulador.calibrarTodosPneusDeMesmoTipoDeVeiculos(
+                                  Bicicleta(-1));
+
+                              break;
+                            default:
+                          }
+                        });
+                      },
+                      onChanged2: (modelo) {
+                        Navigator.pop(context);
+
+                        setState(() {
+                          switch (modelo) {
+                            case "M":
+                              simulador.esvaziarTodosPneusDeMesmoTipo(
+                                  Motocicleta(-1));
+                              break;
+                            case "C":
+                              simulador.esvaziarTodosPneusDeMesmoTipo(
+                                  CarroPasseio(-1));
+                              break;
+                            case "E":
+                              simulador.esvaziarTodosPneusDeMesmoTipo(
+                                  CarroEsportivo(-1));
+                              break;
+                            case "B":
+                              simulador
+                                  .esvaziarTodosPneusDeMesmoTipo(Bicicleta(-1));
+
+                              break;
+                            default:
+                          }
+                        });
+                      },
+                    ),
+                  );
+                },
+              );
             },
-            child: Text(
+            child: const Text(
+              "Calibrar/esvaziar por tipo",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 2,
+              color: Colors.white,
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    contentPadding: EdgeInsets.zero,
+                    content: DialogImprimirPorTipoWidget(
+                      onChanged1: (modelo) {
+                        Navigator.pop(context);
+
+                        simulador.imprimirTodos();
+                      },
+                      onChanged2: (modelo) {
+                        Navigator.pop(context);
+
+                        setState(() {
+                          switch (modelo) {
+                            case "M":
+                              simulador
+                                  .imprimirTodosDeMesmoTipo(Motocicleta(-1));
+                              break;
+                            case "C":
+                              simulador
+                                  .imprimirTodosDeMesmoTipo(CarroPasseio(-1));
+                              break;
+                            case "E":
+                              simulador
+                                  .imprimirTodosDeMesmoTipo(CarroEsportivo(-1));
+                              break;
+                            case "B":
+                              simulador.imprimirTodosDeMesmoTipo(Bicicleta(-1));
+
+                              break;
+                            default:
+                          }
+                        });
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+            child: const Text(
+              "Imprimir",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 2,
+              color: Colors.white,
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(
+                () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        contentPadding: EdgeInsets.zero,
+                        content: SelecaoDeVeiculoWidget(
+                          onChanged: (modelo) {
+                            Navigator.pop(context);
+
+                            setState(() {
+                              simulador.incluirVeiculo();
+                            });
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+            },
+            child: const Text(
               "Adicionar veículo",
               style: TextStyle(
                 color: Colors.white,
@@ -63,11 +269,13 @@ class _HomePageState extends State<HomePage> {
           ),
           TextButton(
             onPressed: () {
-              setState(() {
-                simulador.moverVeiculos();
-              });
+              setState(
+                () {
+                  simulador.moverVeiculos();
+                },
+              );
             },
-            child: Text(
+            child: const Text(
               "Mover todos",
               style: TextStyle(
                 color: Colors.white,
@@ -109,9 +317,8 @@ class _HomePageState extends State<HomePage> {
                                 .getDistanciaPercorrida() *
                             50,
                         velocidade: 2,
-                        modelo: simulador
-                            .getVeiculos()[indexDasFaixas]
-                            .getNomeDoDesenho(),
+                        modelo:
+                            simulador.getVeiculos()[indexDasFaixas].desenhar(),
                         onTap: () => showDialog(
                           context: context,
                           builder: (context) => StatefulBuilder(
@@ -138,7 +345,7 @@ class _HomePageState extends State<HomePage> {
                                       setState(() {
                                         simulador
                                             .getVeiculos()[indexDasFaixas]
-                                            .moverVeiculo();
+                                            .mover();
                                         Navigator.pop(context);
                                       });
                                     },
@@ -165,11 +372,15 @@ class _HomePageState extends State<HomePage> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             for (int indexDoPneu = 0;
-                                                indexDoPneu < 4;
+                                                indexDoPneu <
+                                                    simulador
+                                                        .getVeiculos()[
+                                                            indexDasFaixas]
+                                                        .getQuantidadeDeRodas();
                                                 indexDoPneu++)
                                               Badge(
-                                                label: Text("Pneu " +
-                                                    indexDoPneu.toString()),
+                                                label:
+                                                    Text("Pneu $indexDoPneu"),
                                                 child: PneuWidget(
                                                   onTap: (value) {
                                                     setStateBuilder(() {
@@ -202,52 +413,67 @@ class _HomePageState extends State<HomePage> {
                                           ],
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                              height: 35,
-                                              width: 35,
-                                              child: Image.asset(
-                                                "assets/images/icons/gasolina.png",
+                                      if (simulador
+                                              .getVeiculos()[indexDasFaixas]
+                                          is VeiculoMotorizado)
+                                        Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Row(
+                                            children: [
+                                              SizedBox(
+                                                height: 35,
+                                                width: 35,
+                                                child: Image.asset(
+                                                  "assets/images/icons/gasolina.png",
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: 225,
-                                              child: Slider(
-                                                min: 0,
-                                                max: 9.9,
-                                                value: simulador
-                                                    .getVeiculos()[
-                                                        indexDasFaixas]
-                                                    .getQuantidadeDeCombustivel(),
-                                                divisions: 18,
-                                                thumbColor: Color(0xfff39c12),
-                                                activeColor: Color(0xfffe67e22),
-                                                onChanged: (value) {
-                                                  setStateBuilder(() {
-                                                    simulador.abastecerVeiculo(
-                                                        simulador
-                                                            .getVeiculos()[
+                                              if (simulador.getVeiculos()[
+                                                      indexDasFaixas]
+                                                  is VeiculoMotorizado)
+                                                SizedBox(
+                                                  width: 225,
+                                                  child: Slider(
+                                                    min: 0,
+                                                    max: 9.9,
+                                                    value: (simulador
+                                                                    .getVeiculos()[
                                                                 indexDasFaixas]
-                                                            .getId(),
-                                                        value);
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                          ],
+                                                            as VeiculoMotorizado)
+                                                        .getQuantidadeDeCombustivel(),
+                                                    divisions: 18,
+                                                    thumbColor:
+                                                        const Color(0xfff39c12),
+                                                    activeColor: const Color(
+                                                        0xfffe67e22),
+                                                    onChanged: (value) {
+                                                      setStateBuilder(
+                                                        () {
+                                                          simulador.abastecerVeiculo(
+                                                              simulador
+                                                                  .getVeiculos()[
+                                                                      indexDasFaixas]
+                                                                  .getId(),
+                                                              value);
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: Text(simulador
-                                                .getVeiculos()[indexDasFaixas]
-                                                .getEstadoDoIpva()
-                                            ? "IPVA está pago"
-                                            : "IPVA não está pago"),
-                                      )
+                                      if (simulador
+                                              .getVeiculos()[indexDasFaixas]
+                                          is VeiculoMotorizado)
+                                        Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Text((simulador.getVeiculos()[
+                                                          indexDasFaixas]
+                                                      as VeiculoMotorizado)
+                                                  .getEstadoDoIpva()
+                                              ? "IPVA está pago"
+                                              : "IPVA não está pago"),
+                                        )
                                     ],
                                   ),
                                 ),

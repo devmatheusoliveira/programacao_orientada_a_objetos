@@ -14,6 +14,6 @@ class Roda {
   bool getCalibragem() => _calibragemPneu;
 
   String toString() {
-    return "roda${_calibragemPneu ? ' ' : ' não '}está calibrada";
+    return "roda: ${_calibragemPneu ? ' ' : ' não '}está calibrada";
   }
 }

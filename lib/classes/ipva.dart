@@ -1,3 +1,8 @@
+import 'package:simulador_de_corrida/classes/tipos_de_veiculos/carro_esportivo.dart';
+import 'package:simulador_de_corrida/classes/tipos_de_veiculos/carro_passeio.dart';
+import 'package:simulador_de_corrida/classes/tipos_de_veiculos/motocicleta.dart';
+import 'package:simulador_de_corrida/classes/tipos_de_veiculos/veiculo_motorizado.dart';
+
 abstract class IPVA {
   //interfaces no dart também são implementadas com
   //abstract class
@@ -8,16 +13,16 @@ abstract class IPVA {
 
   double valorBase = 500.00;
 
-  double? calcularIPVA(String veiculoTipo) {
-    switch (veiculoTipo) {
-      case 'M':
-        return valorBase * aliquotaMotocicleta;
-      case 'C':
-        return valorBase * aliquotaCarroPasseio;
-      case 'E':
-        return valorBase * aliquotaCarroEsportivo;
-      default:
-        return null;
+  double? calcularIPVA() {
+    // o is corresponde ao instanceof
+    // ou seja, estou comparando o tipo
+    if (this is Motocicleta) {
+      return valorBase * aliquotaMotocicleta;
+    } else if (this is CarroPasseio) {
+      return valorBase * aliquotaCarroPasseio;
+    } else if (this is CarroEsportivo) {
+      return valorBase * aliquotaCarroEsportivo;
     }
+    return null;
   }
 }
